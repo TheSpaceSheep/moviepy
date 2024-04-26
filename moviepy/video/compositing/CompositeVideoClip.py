@@ -121,7 +121,6 @@ class CompositeVideoClip(VideoClip):
         print(self.bg.get_frame(t))
         im = Image.fromarray(frame)
         print(im)
-        exit()
 
         if self.bg.mask is not None:
             frame_mask = self.bg.mask.get_frame(t)
