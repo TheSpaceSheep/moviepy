@@ -117,15 +117,12 @@ class CompositeVideoClip(VideoClip):
     def make_frame(self, t):
         """The clips playing at time `t` are blitted over one another."""
         frame = self.bg.get_frame(t).astype("uint8")
-        print(frame)
-        print(self.bg.get_frame(t))
         im = Image.fromarray(frame)
-        print(im)
 
         if self.bg.mask is not None:
             frame_mask = self.bg.mask.get_frame(t)
             im_mask = Image.fromarray(255 * frame_mask).convert("L")
-            im = im.putalpha(im_mask)
+            im.putalpha(im_mask)
 
         for clip in self.playing_clips(t):
             im = clip.blit_on(im, t)
