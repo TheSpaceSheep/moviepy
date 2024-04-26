@@ -1,10 +1,12 @@
 """Main video composition interface of MoviePy."""
 
 import numpy as np
-from PIL import Image
 
 from moviepy.audio.AudioClip import CompositeAudioClip
 from moviepy.video.VideoClip import ColorClip, VideoClip
+
+
+# from PIL import Image
 
 
 class CompositeVideoClip(VideoClip):
@@ -116,18 +118,22 @@ class CompositeVideoClip(VideoClip):
 
     def make_frame(self, t):
         """The clips playing at time `t` are blitted over one another."""
-        frame = self.bg.get_frame(t).astype("uint8")
-        im = Image.fromarray(frame)
+        f = self.bg.get_frame(t)
+        for c in self.playing_clips(t):
+            f = c.blit_on(f, t)
+        return f
+        # frame = self.bg.get_frame(t).astype("uint8")
+        # im = Image.fromarray(frame)
 
-        if self.bg.mask is not None:
-            frame_mask = self.bg.mask.get_frame(t)
-            im_mask = Image.fromarray(255 * frame_mask).convert("L")
-            im.putalpha(im_mask)
+        # if self.bg.mask is not None:
+        #    frame_mask = self.bg.mask.get_frame(t)
+        #    im_mask = Image.fromarray(255 * frame_mask).convert("L")
+        #    im.putalpha(im_mask)
 
-        for clip in self.playing_clips(t):
-            im = clip.blit_on(im, t)
+        # for clip in self.playing_clips(t):
+        #    im = clip.blit_on(im, t)
 
-        return np.array(im)
+        # return np.array(im)
 
     def playing_clips(self, t=0):
         """Returns a list of the clips in the composite clips that are
