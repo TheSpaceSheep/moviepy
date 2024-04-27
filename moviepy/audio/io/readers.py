@@ -7,6 +7,7 @@ import numpy as np
 from moviepy.compat import DEVNULL, PY3
 from moviepy.config import get_setting
 from moviepy.video.io.ffmpeg_reader import ffmpeg_parse_infos
+from moviepy.tools import dash_escape
 
 
 class FFMPEG_AudioReader:
@@ -72,10 +73,10 @@ class FFMPEG_AudioReader:
         if starttime !=0 :
             offset = min(1,starttime)
             i_arg = ["-ss", "%.05f"%(starttime-offset),
-                    '-i', self.filename, '-vn',
+                    '-i', dash_escape(self.filename), '-vn',
                     "-ss", "%.05f"%offset]
         else:
-            i_arg = [ '-i', self.filename,  '-vn']
+            i_arg = [ '-i', dash_escape(self.filename),  '-vn']
 
 
         cmd = ([get_setting("FFMPEG_BINARY")] + i_arg +

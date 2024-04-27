@@ -6,6 +6,7 @@ import proglog
 from moviepy.compat import DEVNULL
 from moviepy.config import get_setting
 from moviepy.decorators import requires_duration
+from moviepy.tools import dash_escape
 
 
 class FFMPEG_AudioWriter:
@@ -51,13 +52,13 @@ class FFMPEG_AudioWriter:
                 '-ar', "%d" % fps_input,
                 '-ac', "%d" % nchannels,
                 '-i', '-']
-               + (['-vn'] if input_video is None else ["-i", input_video, '-vcodec', 'copy'])
+               + (['-vn'] if input_video is None else ["-i", dash_escape(input_video), '-vcodec', 'copy'])
                + ['-acodec', codec]
                + ['-ar', "%d" % fps_input]
                + ['-strict', '-2']  # needed to support codec 'aac'
                + (['-ab', bitrate] if (bitrate is not None) else [])
                + (ffmpeg_params if ffmpeg_params else [])
-               + [filename])
+               + [dash_escape(filename)])
 
         popen_params = {"stdout": DEVNULL,
                         "stderr": logfile,

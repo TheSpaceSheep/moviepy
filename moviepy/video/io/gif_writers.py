@@ -7,7 +7,7 @@ import proglog
 from moviepy.compat import DEVNULL
 from moviepy.config import get_setting
 from moviepy.decorators import requires_duration, use_clip_fps_by_default
-from moviepy.tools import subprocess_call
+from moviepy.tools import subprocess_call, dash_escape
 
 try:
     import imageio
@@ -65,9 +65,9 @@ def write_gif_with_tempfiles(clip, filename, fps=None, program= 'ImageMagick',
 
         cmd = [get_setting("FFMPEG_BINARY"), '-y',
                '-f', 'image2', '-r',str(fps),
-               '-i', fileName+'_GIFTEMP%04d.png',
+               '-i', dash_escape(fileName)+'_GIFTEMP%04d.png',
                '-r',str(fps),
-               filename]
+               dash_escape(filename)]
 
     try:
         subprocess_call(cmd, logger=logger)
@@ -177,7 +177,7 @@ def write_gif(clip, filename, fps=None, program= 'ImageMagick',
         popen_params["stdout"] = DEVNULL
 
         proc1 = sp.Popen(cmd1+[ '-pix_fmt', ('rgba' if withmask else 'rgb24'),
-                                '-r', "%.02f"%fps, filename], **popen_params)
+                                '-r', "%.02f"%fps, dash_escape(filename)], **popen_params)
     else:
 
         popen_params["stdin"] = sp.PIPE

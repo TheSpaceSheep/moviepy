@@ -11,6 +11,7 @@ from proglog import proglog
 
 from moviepy.compat import DEVNULL, PY3
 from moviepy.config import get_setting
+from moviepy.tools import dash_escape
 
 
 class FFMPEG_VideoWriter:
@@ -90,7 +91,7 @@ class FFMPEG_VideoWriter:
         ]
         if audiofile is not None:
             cmd.extend([
-                '-i', audiofile,
+                '-i', dash_escape(audiofile),
                 '-acodec', 'copy'
             ])
         cmd.extend([
@@ -114,7 +115,7 @@ class FFMPEG_VideoWriter:
                 '-pix_fmt', 'yuv420p'
             ])
         cmd.extend([
-            filename
+            dash_escape(filename)
         ])
 
         popen_params = {"stdout": DEVNULL,
@@ -243,7 +244,7 @@ def ffmpeg_write_image(filename, image, logfile=False):
            '-s', "%dx%d"%(image.shape[:2][::-1]),
            "-f", 'rawvideo',
            '-pix_fmt', "rgba" if (image.shape[2] == 4) else "rgb24",
-           '-i','-', filename]
+           '-i','-', dash_escape(filename)]
 
     if logfile:
         log_file = open(filename + ".log", 'w+')

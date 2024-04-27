@@ -175,3 +175,7 @@ def find_extension(codec):
         "specify a temp_audiofile with the right extension "
         "in write_videofile."
     )
+
+
+def dash_escape(string):
+    return './'*(string[0]=='-') + string
